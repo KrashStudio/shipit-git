@@ -174,7 +174,7 @@ The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
 
 ### Local
 
-- git 1.7.8+
+- git 2+
 - rsync 3+
 - OpenSSH 5+
 
