@@ -101,12 +101,6 @@ Several variables are attached during the deploy and the rollback process:
 
 All options describe in the config sections are avalaible in the `shipit.config` object.
 
-### shipit.repository
-
-Attached during `deploy:fetch` task.
-
-You can manipulate the repository using git command, the API is describe in [gift](https://github.com/sentientwaffle/gift).
-
 ### shipit.releaseDirname
 
 Attached during `deploy:update` and `rollback:init` task.
@@ -136,14 +130,6 @@ The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
 - deploy
   - deploy:init
     - Emit event "deploy".
-  - deploy:fetch
-    - Create workspace.
-    - Initialize repository.
-    - Add remote.
-    - Fetch repository.
-    - Checkout commit-ish.
-    - Merge remote branch in local branch.
-    - Emit event "fetched".
   - deploy:update
     - Create and define release path.
     - Remote copy project.
