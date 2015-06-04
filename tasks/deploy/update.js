@@ -65,7 +65,7 @@ module.exports = function (gruntOrShipit) {
 
     function remoteCopy() {
       shipit.log('Git clone project on remote servers.');
-      return shipit.remote('git clone -b ' + shipit.config.branch + ' --single-branch ' + shipit.config.repositoryUrl + ' ' + shipit.releasePath)
+      return shipit.remote('git clone -b ' + shipit.config.branch + ' --depth=1 ' + shipit.config.repositoryUrl + ' ' + shipit.releasePath)
       .then(function (res) {
         shipit.log(chalk.green('Finished copy.'));
       });

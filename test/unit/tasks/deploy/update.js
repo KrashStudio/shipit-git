@@ -76,7 +76,7 @@ describe('deploy:update task', function () {
         expect(shipit.releasesPath).to.equal('/remote/deploy/releases');
         expect(shipit.releasePath).to.equal('/remote/deploy/releases/' + dirName);
         expect(shipit.remote).to.be.calledWith('mkdir -p /remote/deploy/releases/' + dirName);
-        expect(shipit.remote).to.be.calledWith('git clone -b ' + shipit.config.branch + ' --single-branch ' + shipit.config.repositoryUrl + ' ' + shipit.releasePath);
+        expect(shipit.remote).to.be.calledWith('git clone -b ' + shipit.config.branch + ' --depth=1 ' + shipit.config.repositoryUrl + ' ' + shipit.releasePath);
         done();
       });
 
@@ -101,7 +101,7 @@ describe('deploy:update task', function () {
             shipit.start('deploy:update', function (err) {
               if (err) reject(err);
               var dirName = moment.utc().format('YYYYMMDDHHmmss');
-              expect(shipit.remote).to.be.calledWith('git clone -b ' + shipit.config.branch + ' --single-branch ' + shipit.config.repositoryUrl + ' ' + shipit.releasePath);
+              expect(shipit.remote).to.be.calledWith('git clone -b ' + shipit.config.branch + ' --depth=1 ' + shipit.config.repositoryUrl + ' ' + shipit.releasePath);
               clock.tick(5);
               resolve()
             })
