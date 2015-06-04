@@ -1,6 +1,6 @@
 {
   "name": "shipit-git",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Set of deployment tasks for Shipit based on git to deploy from git repository to servers.",
   "main": "index.js",
   "directories": {
