@@ -1,9 +1,9 @@
 # shipit-git
 
 
-[![Build Status](https://travis-ci.org/krashstudio/shipit-git.svg?branch=master)](https://travis-ci.org/krashstudio/shipit-git)
-[![Dependency Status](https://david-dm.org/krashstudio/shipit-git.svg?theme=shields.io)](https://david-dm.org/krashstudio/shipit-git)
-[![devDependency Status](https://david-dm.org/krashstudio/shipit-git/dev-status.svg?theme=shields.io)](https://david-dm.org/krashstudio/shipit-git#info=devDependencies)
+[![Build Status](https://travis-ci.org/KrashStudio/shipit-git.svg?branch=master)](https://travis-ci.org/KrashStudio/shipit-git)
+[![Dependency Status](https://david-dm.org/KrashStudio/shipit-git.svg?theme=shields.io)](https://david-dm.org/KrashStudio/shipit-git)
+[![devDependency Status](https://david-dm.org/KrashStudio/shipit-git/dev-status.svg?theme=shields.io)](https://david-dm.org/KrashStudio/shipit-git#info=devDependencies)
 
 Set of deployment tasks for [Shipit](https://github.com/shipitjs/shipit) based on git to deploy from git repository to servers.
 
@@ -101,12 +101,6 @@ Several variables are attached during the deploy and the rollback process:
 
 All options describe in the config sections are avalaible in the `shipit.config` object.
 
-### shipit.repository
-
-Attached during `deploy:fetch` task.
-
-You can manipulate the repository using git command, the API is describe in [gift](https://github.com/sentientwaffle/gift).
-
 ### shipit.releaseDirname
 
 Attached during `deploy:update` and `rollback:init` task.
@@ -136,14 +130,6 @@ The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
 - deploy
   - deploy:init
     - Emit event "deploy".
-  - deploy:fetch
-    - Create workspace.
-    - Initialize repository.
-    - Add remote.
-    - Fetch repository.
-    - Checkout commit-ish.
-    - Merge remote branch in local branch.
-    - Emit event "fetched".
   - deploy:update
     - Create and define release path.
     - Remote copy project.
@@ -174,7 +160,7 @@ The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
 
 ### Local
 
-- git 1.7.8+
+- git 2+
 - rsync 3+
 - OpenSSH 5+
 
