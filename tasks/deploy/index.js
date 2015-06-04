@@ -2,7 +2,6 @@ var utils = require('shipit-utils');
 
 /**
  * Deploy task.
- * - deploy:fetch
  * - deploy:update
  * - deploy:publish
  * - deploy:clean
