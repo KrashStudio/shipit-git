@@ -44,7 +44,7 @@ describe('deploy:update task', function () {
       expect(shipit.releasesPath).to.equal('/remote/deploy/releases');
       expect(shipit.releasePath).to.equal('/remote/deploy/releases/' + dirName);
       expect(shipit.remote).to.be.calledWith('mkdir -p /remote/deploy/releases/' + dirName);
-      expect(shipit.remoteCopy).to.be.calledWith('/tmp/workspace/', '/remote/deploy/releases/' + dirName);
+      expect(shipit.remote).to.be.calledWith('git clone -b ' + shipit.config.branch + ' --depth=1 ' + shipit.config.repositoryUrl + ' ' + shipit.releasePath);
       done();
     });
 
