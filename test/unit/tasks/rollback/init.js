@@ -6,7 +6,6 @@ var Promise = require('bluebird');
 
 describe('rollback:init task', function () {
   var shipit;
-  var readLinkCommand = 'if [ -h /remote/deploy/current ]; then readlink /remote/deploy/current; fi';
 
   beforeEach(function () {
     shipit = new Shipit({
@@ -29,7 +28,7 @@ describe('rollback:init task', function () {
     describe('unsync server', function () {
       beforeEach(function () {
         sinon.stub(shipit, 'remote', function (command) {
-          if (command === readLinkCommand)
+          if (command === 'readlink /remote/deploy/current')
             return Promise.resolve([
               {stdout: '/remote/deploy/releases/20141704123138'},
               {stdout: '/remote/deploy/releases/20141704123137'}
@@ -43,7 +42,7 @@ describe('rollback:init task', function () {
 
       it('should return an error', function (done) {
         shipit.start('rollback:init', function (err) {
-          expect(err.message).to.equal('Remote servers are not synced.');
+          expect(err.message).to.equal('Remote server are not synced.');
           done();
         });
       });
@@ -52,7 +51,7 @@ describe('rollback:init task', function () {
     describe('bad release dirname', function () {
       beforeEach(function () {
         sinon.stub(shipit, 'remote', function (command) {
-          if (command === readLinkCommand)
+          if (command === 'readlink /remote/deploy/current')
             return Promise.resolve([]);
         });
       });
@@ -74,7 +73,7 @@ describe('rollback:init task', function () {
     describe('unsync server', function () {
       beforeEach(function () {
         sinon.stub(shipit, 'remote', function (command) {
-          if (command === readLinkCommand)
+          if (command === 'readlink /remote/deploy/current')
             return Promise.resolve([
               {stdout: '/remote/deploy/releases/20141704123137'}
             ]);
@@ -92,7 +91,7 @@ describe('rollback:init task', function () {
 
       it('should return an error', function (done) {
         shipit.start('rollback:init', function (err) {
-          expect(err.message).to.equal('Remote servers are not synced.');
+          expect(err.message).to.equal('Remote server are not synced.');
           done();
         });
       });
@@ -101,7 +100,7 @@ describe('rollback:init task', function () {
     describe('bad releases', function () {
       beforeEach(function () {
         sinon.stub(shipit, 'remote', function (command) {
-          if (command === readLinkCommand)
+          if (command === 'readlink /remote/deploy/current')
             return Promise.resolve([
               {stdout: '/remote/deploy/releases/20141704123137'}
             ]);
@@ -126,7 +125,7 @@ describe('rollback:init task', function () {
   describe('release not exists', function () {
     beforeEach(function () {
       sinon.stub(shipit, 'remote', function (command) {
-        if (command === readLinkCommand)
+        if (command === 'readlink /remote/deploy/current')
           return Promise.resolve([
             {stdout: '/remote/deploy/releases/20141704123137'}
           ]);
@@ -152,7 +151,7 @@ describe('rollback:init task', function () {
   describe('all good', function () {
     beforeEach(function () {
       sinon.stub(shipit, 'remote', function (command) {
-        if (command === readLinkCommand)
+        if (command === 'readlink /remote/deploy/current')
           return Promise.resolve([
             {stdout: '/remote/deploy/releases/20141704123137\n'}
           ]);
@@ -172,7 +171,7 @@ describe('rollback:init task', function () {
         if (err) return done(err);
         expect(shipit.currentPath).to.equal('/remote/deploy/current');
         expect(shipit.releasesPath).to.equal('/remote/deploy/releases');
-        expect(shipit.remote).to.be.calledWith(readLinkCommand);
+        expect(shipit.remote).to.be.calledWith('readlink /remote/deploy/current');
         expect(shipit.remote).to.be.calledWith('ls -r1 /remote/deploy/releases');
         expect(shipit.releaseDirname).to.equal('20141704123136');
         expect(shipit.releasePath).to.equal('/remote/deploy/releases/20141704123136');

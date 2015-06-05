@@ -1,30 +1,32 @@
-var utils = require('shipit-utils');
+var registerTask = require('../../lib/register-task');
+var getShipit = require('../../lib/get-shipit');
 var chalk = require('chalk');
 var path = require('path2/posix');
 
 /**
  * Publish task.
- * - Update symbolic link.
+ * - Update synonym link.
  */
 
 module.exports = function (gruntOrShipit) {
-  utils.registerTask(gruntOrShipit, 'deploy:publish', task);
+  registerTask(gruntOrShipit, 'deploy:publish', task);
 
   function task() {
-    var shipit = utils.getShipit(gruntOrShipit);
+    var shipit = getShipit(gruntOrShipit);
 
-    return updateSymbolicLink()
+    return updateSynonymLink()
     .then(function () {
       shipit.emit('published');
     });
 
     /**
-     * Update symbolic link.
+     * Update synonym link.
      */
 
-    function updateSymbolicLink() {
+    function updateSynonymLink() {
       shipit.log('Publishing release "%s"', shipit.releasePath);
 
+      shipit.currentPath = path.join(shipit.config.deployTo, 'current');
       var relativeReleasePath = path.join('releases', shipit.releaseDirname);
 
       return shipit.remote('cd ' + shipit.config.deployTo + ' && ln -nfs ' + relativeReleasePath + ' current')
