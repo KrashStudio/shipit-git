@@ -9,7 +9,6 @@ var registerTask = require('../../lib/register-task');
 
 module.exports = function (gruntOrShipit) {
   require('./init')(gruntOrShipit);
-  require('../deploy/fetch')(gruntOrShipit);
   require('../deploy/clean')(gruntOrShipit);
 
   registerTask(gruntOrShipit, 'rollback', [
