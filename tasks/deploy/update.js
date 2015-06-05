@@ -1,48 +1,26 @@
-var utils = require('shipit-utils');
+var registerTask = require('../../lib/register-task');
+var getShipit = require('../../lib/get-shipit');
 var path = require('path2/posix');
 var moment = require('moment');
 var chalk = require('chalk');
-var _ = require('lodash');
-var util = require('util');
-var Promise = require('bluebird');
 
 /**
  * Update task.
- * - Set previous release.
- * - Set previous revision.
  * - Create and define release path.
- * - Copy previous release (for faster rsync)
- * - Set current revision and write REVISION file.
  * - Remote copy project.
  */
 
 module.exports = function (gruntOrShipit) {
-  utils.registerTask(gruntOrShipit, 'deploy:update', task);
+  registerTask(gruntOrShipit, 'deploy:update', task);
 
   function task() {
-    var shipit = utils.getShipit(gruntOrShipit);
-    _.assign(shipit.constructor.prototype, require('../../lib/shipit'));
+    var shipit = getShipit(gruntOrShipit);
 
-    return setPreviousRelease()
-    .then(setPreviousRevision)
-    .then(createReleasePath)
-    .then(copyPreviousRelease)
+    return createReleasePath()
     .then(remoteCopy)
-    .then(setCurrentRevision)
     .then(function () {
       shipit.emit('updated');
     });
-
-    /**
-     * Copy previous release to release dir.
-     */
-
-    function copyPreviousRelease() {
-      if (!shipit.previousRelease) {
-        return Promise.resolve();
-      }
-      return shipit.remote(util.format('cp -a %s/. %s', path.join(shipit.releasesPath, shipit.previousRelease), shipit.releasePath));
-    }
 
     /**
      * Create and define release path.
@@ -50,6 +28,7 @@ module.exports = function (gruntOrShipit) {
 
     function createReleasePath() {
       shipit.releaseDirname = moment.utc().format('YYYYMMDDHHmmss');
+      shipit.releasesPath = path.join(shipit.config.deployTo, 'releases');
       shipit.releasePath = path.join(shipit.releasesPath, shipit.releaseDirname);
 
       shipit.log('Create release path "%s"', shipit.releasePath);
@@ -60,65 +39,14 @@ module.exports = function (gruntOrShipit) {
     }
 
     /**
-     * Remote git clone project.
+     * Remote copy project.
      */
 
     function remoteCopy() {
-      shipit.log('Git clone project on remote servers.');
+      shipit.log('Clone project to remote servers.');
       return shipit.remote('git clone -b ' + shipit.config.branch + ' --depth=1 ' + shipit.config.repositoryUrl + ' ' + shipit.releasePath)
       .then(function (res) {
         shipit.log(chalk.green('Finished copy.'));
-      });
-    }
-
-    /**
-     * Set shipit.previousRevision from remote REVISION file.
-     */
-
-    function setPreviousRevision() {
-      shipit.previousRevision = null;
-
-      if (!shipit.previousRelease) {
-        return Promise.resolve();
-      }
-
-      return shipit.getRevision(shipit.previousRelease)
-      .then(function(revision) {
-
-        if (revision) {
-          shipit.log(chalk.green('Previous revision found.'));
-          shipit.previousRevision = revision;
-        }
-      });
-    }
-
-    /**
-     * Set shipit.previousRelease.
-     */
-
-    function setPreviousRelease() {
-      shipit.previousRelease = null;
-      return shipit.getPreviousReleaseDirname()
-      .then(function(previousReleaseDir) {
-        if (previousReleaseDir) {
-          shipit.log(chalk.green('Previous release found.'));
-          shipit.previousRelease = previousReleaseDir;
-        }
-      });
-    }
-
-    /**
-     * Set shipit.currentRevision and write it to REVISION file.
-     */
-
-    function setCurrentRevision() {
-      shipit.log('Setting current revision and creating revision file.');
-
-      return shipit.local('git rev-parse ' + shipit.config.branch, {cwd: shipit.config.workspace}).then(function(response) {
-        shipit.currentRevision = response.stdout.trim();
-        return shipit.remote('echo "' + shipit.currentRevision + '" > ' + path.join(shipit.releasePath, 'REVISION'));
-      }).then(function() {
-        shipit.log(chalk.green('Revision file created.'));
       });
     }
   }

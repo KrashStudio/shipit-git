@@ -1,4 +1,5 @@
-var utils = require('shipit-utils');
+var registerTask = require('../../lib/register-task');
+var getShipit = require('../../lib/get-shipit');
 
 /**
  * Clean task.
@@ -6,10 +7,10 @@ var utils = require('shipit-utils');
  */
 
 module.exports = function (gruntOrShipit) {
-  utils.registerTask(gruntOrShipit, 'deploy:clean', task);
+  registerTask(gruntOrShipit, 'deploy:clean', task);
 
   function task() {
-    var shipit = utils.getShipit(gruntOrShipit);
+    var shipit = getShipit(gruntOrShipit);
 
     return cleanOldReleases()
     .then(function () {
