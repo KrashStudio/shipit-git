@@ -1,10 +1,8 @@
-# shipit-deploy
+# shipit-git
 
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/shipitjs/shipit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![Build Status](https://travis-ci.org/shipitjs/shipit-deploy.svg?branch=master)](https://travis-ci.org/shipitjs/shipit-deploy)
-[![Dependency Status](https://david-dm.org/shipitjs/shipit-deploy.svg?theme=shields.io)](https://david-dm.org/shipitjs/shipit-deploy)
-[![devDependency Status](https://david-dm.org/shipitjs/shipit-deploy/dev-status.svg?theme=shields.io)](https://david-dm.org/shipitjs/shipit-deploy#info=devDependencies)
+[![Build Status](https://travis-ci.org/KrashStudio/shipit-git.svg)](https://travis-ci.org/KrashStudio/shipit-git)
+[![Dependency Status](https://david-dm.org/KrashStudio/shipit-git.svg?theme=shields.io)](https://david-dm.org/KrashStudio/shipit-git)
+[![devDependency Status](https://david-dm.org/KrashStudio/shipit-git/dev-status.svg?theme=shields.io)](https://david-dm.org/KrashStudio/shipit-git#info=devDependencies)
 
 Set of deployment tasks for [Shipit](https://github.com/shipitjs/shipit) based on git and rsync commands.
 
@@ -18,7 +16,7 @@ Set of deployment tasks for [Shipit](https://github.com/shipitjs/shipit) based o
 ## Install
 
 ```
-npm install shipit-deploy
+npm install KrashStudio/shipit-git
 ```
 
 ## Usage
@@ -27,17 +25,18 @@ npm install shipit-deploy
 
 ```js
 module.exports = function (shipit) {
-  require('shipit-deploy')(shipit);
+  require('shipit-git')(shipit);
 
   shipit.initConfig({
     default: {
-      workspace: '/tmp/github-monitor',
-      deployTo: '/tmp/deploy_to',
-      repositoryUrl: 'https://github.com/user/repo.git',
-      ignores: ['.git', 'node_modules'],
-      keepReleases: 2,
-      key: '/path/to/key',
-      shallowClone: true
+      branch: 'master',
+      url: 'https://project.com',
+      key: '$HOME/.ssh/id_rsa.pub',
+      deployTo: '/path/to/deploy',
+      repositoryUrl: 'git@github.com:user/repo.git',
+      workspace: '/path/to/worksace',
+      keepReleases: 5,
+      shallowClone: false
     },
     staging: {
       servers: 'user@myserver.com'
@@ -110,12 +109,6 @@ Several variables are attached during the deploy and the rollback process:
 
 All options describe in the config sections are avalaible in the `shipit.config` object.
 
-### shipit.repository
-
-Attached during `deploy:fetch` task.
-
-You can manipulate the repository using git command, the API is describe in [gift](https://github.com/sentientwaffle/gift).
-
 ### shipit.releaseDirname
 
 Attached during `deploy:update` and `rollback:init` task.
@@ -145,14 +138,6 @@ The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
 - deploy
   - deploy:init
     - Emit event "deploy".
-  - deploy:fetch
-    - Create workspace.
-    - Initialize repository.
-    - Add remote.
-    - Fetch repository.
-    - Checkout commit-ish.
-    - Merge remote branch in local branch.
-    - Emit event "fetched".
   - deploy:update
     - Create and define release path.
     - Remote copy project.
@@ -178,8 +163,7 @@ The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
 
 ### Local
 
-- git 1.7.8+
-- rsync 3+
+- git 2.0.0+
 - OpenSSH 5+
 
 ### Remote
