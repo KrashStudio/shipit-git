@@ -170,6 +170,10 @@ The current symlink path : `path.join(shipit.config.deployTo, 'current')`.
 
 - GNU coreutils 5+
 
+## Contributors
+
+- [welcoMattic](https://github.com/welcoMattic)
+
 ## License
 
 MIT
